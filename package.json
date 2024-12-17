@@ -7,7 +7,7 @@
   },
   "homepage": "https://username.github.io/repository-name",
   "scripts": {
-    "build": "npx tailwindcss -i ./src/style.css -o ./src/output.css",
+    "build": "npx tailwindcss -i ./src/input.css -o ./src/output.css",
     "predeploy": "npm run build", 
     "deploy": "gh-pages -d src"
   }
