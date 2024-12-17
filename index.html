@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./output.css">
+  <title>Calculator</title>
+</head>
+<body class="flex justify-center items-center min-h-[100vh] m-0 bg-slate-50 font-sans">
+  <div class="calculator bg-slate-600 rounded-lg p-5 w-[80%] max-w-[400px]">
+    <div class="display bg-white p-3 mb-3 rounded-md text-right font-[28px] overflow-x-auto" id="display">0</div>
+    <div class="buttons grid grid-cols-4 gap-1">
+      <button class="clear" data-action="clear">C</button>
+      <button data-value="(">(</button>
+      <button data-value=")">)</button>
+      <button class="backspace" data-action="backspace">&larr;</button>
+      
+      <button data-value="7">7</button>
+      <button data-value="8">8</button>
+      <button data-value="9">9</button>
+      <button class="operator" data-value="/">/</button>
+      
+      <button data-value="4">4</button>
+      <button data-value="5">5</button>
+      <button data-value="6">6</button>
+      <button class="operator" data-value="*">x</button>
+      
+      <button data-value="1">1</button>
+      <button data-value="2">2</button>
+      <button data-value="3">3</button>
+      <button class="operator" data-value="-">-</button>
+      
+      <button data-value="0">0</button>
+      <button data-value=".">.</button>
+      <button class="equals" data-action="calculate">=</button>
+      <button class="operator" data-value="+">+</button>
+    </div>
+  </div>
+
+  <script>
+    /*
+    - display: The display screen element
+    - inputValue: The current input value as a string
+    */
+    const calculatorState = {
+      display: document.getElementById('display'),
+      inputValue: '0' 
+    };
+
+    // updates the display with the current input value.
+    const updateDisplay = () => {
+      calculatorState.display.textContent = calculatorState.inputValue;
+    };
+
+    // clears the display and updates it with 0
+    const clear = () => {
+      calculatorState.inputValue = '0'; 
+      updateDisplay();
+    };
+
+    // removes the last character from the display
+    const backspace = () => {
+      calculatorState.inputValue = calculatorState.inputValue.length === 1 
+        ? '0' 
+        : calculatorState.inputValue.slice(0, -1); 
+      updateDisplay();
+    };
+
+    // adds a character to the display
+    const appendCharacter = (char) => {
+      calculatorState.inputValue = calculatorState.inputValue === '0' && char !== '.' 
+        ? char 
+        : calculatorState.inputValue + char;  
+      updateDisplay();
+    };
+
+    // calculates the result of the expression in the display
+    const calculate = () => {
+      try {
+        // creates a new function and returns the result of the expression
+        const result = new Function('return ' + calculatorState.inputValue)();
+        calculatorState.inputValue = Number.isInteger(result) 
+          ? result.toString() 
+          : result.toFixed(2); 
+        updateDisplay();
+      } catch (error) {
+        calculatorState.inputValue = 'Error'; 
+        updateDisplay();
+        setTimeout(clear, 1000);  
+      }
+    };
+
+    // this handles button clicks
+    const handleButtonClick = (event) => {
+      const element = event.target;
+      
+      if (element.tagName === 'BUTTON') {
+        if (element.dataset.action === 'clear') {
+          clear();
+        } else if (element.dataset.action === 'calculate') {
+          calculate();
+        } else if (element.dataset.action === 'backspace') {
+          backspace();
+        } else if (element.dataset.value) {
+          appendCharacter(element.dataset.value);
+        }
+      }
+    };
+
+    // this handles keyboard input
+    const handleKeydown = (event) => {
+      const key = event.key;
+      
+      if (/[\d\.\+\-\*\/\(\)]/.test(key)) {
+        event.preventDefault();
+        appendCharacter(key); 
+      } else if (key === 'Enter') {
+        event.preventDefault();
+        calculate(); 
+        event.preventDefault();
+        clear(); 
+      } else if (key === 'Backspace') {
+        event.preventDefault();
+        backspace();  
+      }
+    };
+
+    // event listeners for button clicks and keyboard input
+    document.querySelector('.calculator').addEventListener('click', handleButtonClick);
+    document.addEventListener('keydown', handleKeydown);
+  </script>
+</body>
+</html>
