@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+button {
+  padding: 20px; 
+  font-size: 20px; 
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #666;
+  color: white;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #888;
+}
+
+.operator {
+  background-color: #ff9500;
+}
+.operator:hover {
+  background-color: #ffaa33;
+}
+
+.clear, .backspace {
+  background-color: #e74c3c;
+}
+.clear:hover, .backspace:hover {
+  background-color: #c0392b;
+}
